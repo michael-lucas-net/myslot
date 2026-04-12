@@ -743,7 +743,7 @@ RegEvent("ADDON_LOADED", function()
         end
         -- exportEditbox:SetScript("OnTextChanged", function() save(false) end)
 
-        UIDropDownMenu_Initialize(t, function()
+        local initDropdown = function()
             local info = UIDropDownMenu_CreateInfo()
             info.text = L["Before Last Import"]
             info.customCheckIconTexture = "Interface\\Icons\\inv_scroll_04"
@@ -766,7 +766,8 @@ RegEvent("ADDON_LOADED", function()
                 itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
                 UIDropDownMenu_AddButton(itemInfo)
             end
-        end)
+        end
+        UIDropDownMenu_Initialize(t, initDropdown)
 
         local popctx = {}
 
@@ -859,6 +860,40 @@ RegEvent("ADDON_LOADED", function()
                     popctx.current = c
                     StaticPopup_Show("MYSLOT_EXPORT_TITLE")
                 end
+            end)
+        end
+
+        do
+            local b = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
+            b:SetWidth(70)
+            b:SetHeight(25)
+            b:SetPoint("TOPLEFT", t, 540, 0)
+            b:SetText(L["Sort"])
+            b:SetScript("OnClick", function()
+                if #exports < 2 then return end
+
+                -- Remember currently selected profile name
+                local selectedIdx = UIDropDownMenu_GetSelectedValue(t)
+                local selectedName = selectedIdx and exports[selectedIdx] and exports[selectedIdx].name
+
+                -- Sort in-place, case-insensitive ascending
+                table.sort(exports, function(x, y)
+                    return string.lower(x.name) < string.lower(y.name)
+                end)
+
+                -- Re-select the previously selected profile by name
+                if selectedName then
+                    for i, entry in ipairs(exports) do
+                        if entry.name == selectedName then
+                            UIDropDownMenu_SetSelectedValue(t, i)
+                            UIDropDownMenu_SetText(t, selectedName)
+                            break
+                        end
+                    end
+                end
+
+                -- Rebuild dropdown to reflect new order
+                UIDropDownMenu_Initialize(t, initDropdown)
             end)
         end
 
