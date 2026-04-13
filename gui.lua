@@ -751,6 +751,7 @@ RegEvent("ADDON_LOADED", function()
         end
         -- exportEditbox:SetScript("OnTextChanged", function() save(false) end)
 
+        local classFilterActive = false
         local initDropdown = function()
             local info = UIDropDownMenu_CreateInfo()
             info.text = L["Before Last Import"]
@@ -901,6 +902,24 @@ RegEvent("ADDON_LOADED", function()
                 end
 
                 -- Rebuild dropdown to reflect new order
+                UIDropDownMenu_Initialize(t, initDropdown)
+            end)
+        end
+
+        do
+            local _, englishClass = UnitClass("player")
+            local b = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
+            b:SetWidth(50)
+            b:SetHeight(25)
+            b:SetPoint("TOPLEFT", t, 615, 0)
+            do
+                local icon = b:CreateTexture(nil, 'ARTWORK')
+                icon:SetTexture("Interface\\Icons\\ClassIcon_" .. englishClass)
+                icon:SetPoint('CENTER', 0, 0)
+                icon:SetSize(20, 20)
+            end
+            b:SetScript("OnClick", function()
+                classFilterActive = not classFilterActive
                 UIDropDownMenu_Initialize(t, initDropdown)
             end)
         end
