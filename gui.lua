@@ -914,10 +914,10 @@ RegEvent("ADDON_LOADED", function()
             local icon = b:CreateTexture(nil, "ARTWORK")
             icon:SetPoint("CENTER", 0, 0)
             icon:SetSize(20, 20)
-            RegEvent("PLAYER_LOGIN", function()
-                local _, englishClass = UnitClass("player")
+            local _, englishClass = UnitClass("player")
+            if englishClass then
                 icon:SetTexture("Interface\\Icons\\ClassIcon_" .. englishClass)
-            end)
+            end
             b:SetScript("OnClick", function()
                 classFilterActive = not classFilterActive
                 if classFilterActive then
