@@ -907,19 +907,24 @@ RegEvent("ADDON_LOADED", function()
         end
 
         do
-            local _, englishClass = UnitClass("player")
             local b = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
-            b:SetWidth(50)
+            b:SetWidth(30)
             b:SetHeight(25)
             b:SetPoint("TOPLEFT", t, 615, 0)
-            do
-                local icon = b:CreateTexture(nil, 'ARTWORK')
+            local icon = b:CreateTexture(nil, "ARTWORK")
+            icon:SetPoint("CENTER", 0, 0)
+            icon:SetSize(20, 20)
+            RegEvent("PLAYER_LOGIN", function()
+                local _, englishClass = UnitClass("player")
                 icon:SetTexture("Interface\\Icons\\ClassIcon_" .. englishClass)
-                icon:SetPoint('CENTER', 0, 0)
-                icon:SetSize(20, 20)
-            end
+            end)
             b:SetScript("OnClick", function()
                 classFilterActive = not classFilterActive
+                if classFilterActive then
+                    b:LockHighlight()
+                else
+                    b:UnlockHighlight()
+                end
                 UIDropDownMenu_Initialize(t, initDropdown)
             end)
         end
