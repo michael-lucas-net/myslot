@@ -768,7 +768,7 @@ RegEvent("ADDON_LOADED", function()
 
             if not classFilterActive then
                 -- Normal mode: show all profiles in order
-                for i, txt in pairs(exports) do
+                for i, txt in ipairs(exports) do
                     local itemInfo = UIDropDownMenu_CreateInfo()
                     itemInfo.text = txt.name
                     itemInfo.value = i
@@ -777,39 +777,43 @@ RegEvent("ADDON_LOADED", function()
                     UIDropDownMenu_AddButton(itemInfo)
                 end
             else
-                -- Filtered mode: matching class first, then separator, then rest greyed out
+                -- Filtered mode: single pass to partition, then display matching first, non-matching greyed out
                 local playerClass = UnitClass("player")
-
-                -- First pass: matching profiles
-                for i, txt in pairs(exports) do
+                local matching, nonMatching = {}, {}
+                for i, txt in ipairs(exports) do
                     if GetProfileClass(txt.value) == playerClass then
-                        local itemInfo = UIDropDownMenu_CreateInfo()
-                        itemInfo.text = txt.name
-                        itemInfo.value = i
-                        itemInfo.func = onclick
-                        itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
-                        UIDropDownMenu_AddButton(itemInfo)
+                        matching[#matching + 1] = {i = i, txt = txt}
+                    else
+                        nonMatching[#nonMatching + 1] = {i = i, txt = txt}
                     end
                 end
 
-                -- Separator between matching and non-matching
-                local sepInfo = UIDropDownMenu_CreateInfo()
-                sepInfo.isTitle = true
-                sepInfo.notCheckable = true
-                sepInfo.text = " "
-                UIDropDownMenu_AddButton(sepInfo)
+                for _, entry in ipairs(matching) do
+                    local itemInfo = UIDropDownMenu_CreateInfo()
+                    itemInfo.text = entry.txt.name
+                    itemInfo.value = entry.i
+                    itemInfo.func = onclick
+                    itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
+                    UIDropDownMenu_AddButton(itemInfo)
+                end
 
-                -- Second pass: non-matching profiles (greyed out but still clickable)
-                for i, txt in pairs(exports) do
-                    if GetProfileClass(txt.value) ~= playerClass then
-                        local itemInfo = UIDropDownMenu_CreateInfo()
-                        itemInfo.text = txt.name
-                        itemInfo.value = i
-                        itemInfo.func = onclick
-                        itemInfo.colorCode = "|cff888888"
-                        itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
-                        UIDropDownMenu_AddButton(itemInfo)
-                    end
+                -- Separator only when both sections have entries
+                if #matching > 0 and #nonMatching > 0 then
+                    local sepInfo = UIDropDownMenu_CreateInfo()
+                    sepInfo.isTitle = true
+                    sepInfo.notCheckable = true
+                    sepInfo.text = " " -- blank title acts as visual separator
+                    UIDropDownMenu_AddButton(sepInfo)
+                end
+
+                for _, entry in ipairs(nonMatching) do
+                    local itemInfo = UIDropDownMenu_CreateInfo()
+                    itemInfo.text = entry.txt.name
+                    itemInfo.value = entry.i
+                    itemInfo.func = onclick
+                    itemInfo.colorCode = "|cff888888"
+                    itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
+                    UIDropDownMenu_AddButton(itemInfo)
                 end
             end
         end
