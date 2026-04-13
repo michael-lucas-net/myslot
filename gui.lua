@@ -766,14 +766,51 @@ RegEvent("ADDON_LOADED", function()
             end
             UIDropDownMenu_AddButton(info)
 
-            for i, txt in pairs(exports) do
-                -- print(txt.name)
-                local itemInfo = UIDropDownMenu_CreateInfo()
-                itemInfo.text = txt.name
-                itemInfo.value = i
-                itemInfo.func = onclick
-                itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
-                UIDropDownMenu_AddButton(itemInfo)
+            if not classFilterActive then
+                -- Normal mode: show all profiles in order
+                for i, txt in pairs(exports) do
+                    local itemInfo = UIDropDownMenu_CreateInfo()
+                    itemInfo.text = txt.name
+                    itemInfo.value = i
+                    itemInfo.func = onclick
+                    itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
+                    UIDropDownMenu_AddButton(itemInfo)
+                end
+            else
+                -- Filtered mode: matching class first, then separator, then rest greyed out
+                local playerClass = UnitClass("player")
+
+                -- First pass: matching profiles
+                for i, txt in pairs(exports) do
+                    if GetProfileClass(txt.value) == playerClass then
+                        local itemInfo = UIDropDownMenu_CreateInfo()
+                        itemInfo.text = txt.name
+                        itemInfo.value = i
+                        itemInfo.func = onclick
+                        itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
+                        UIDropDownMenu_AddButton(itemInfo)
+                    end
+                end
+
+                -- Separator between matching and non-matching
+                local sepInfo = UIDropDownMenu_CreateInfo()
+                sepInfo.isTitle = true
+                sepInfo.notCheckable = true
+                sepInfo.text = " "
+                UIDropDownMenu_AddButton(sepInfo)
+
+                -- Second pass: non-matching profiles (greyed out but still clickable)
+                for i, txt in pairs(exports) do
+                    if GetProfileClass(txt.value) ~= playerClass then
+                        local itemInfo = UIDropDownMenu_CreateInfo()
+                        itemInfo.text = txt.name
+                        itemInfo.value = i
+                        itemInfo.func = onclick
+                        itemInfo.colorCode = "|cff888888"
+                        itemInfo.customCheckIconTexture = "Interface\\Icons\\inv_scroll_03"
+                        UIDropDownMenu_AddButton(itemInfo)
+                    end
+                end
             end
         end
         UIDropDownMenu_Initialize(t, initDropdown)
