@@ -7,7 +7,11 @@ local IMPORT_BACKUP_COUNT = 1
 
 local function GetProfileClass(value)
     if not value then return nil end
-    return value:match("# " .. CLASS .. ": ([^\r\n]+)")
+    local prefix = "# " .. CLASS .. ": "
+    local s, e = value:find(prefix, 1, true)   -- plain=true, no pattern magic
+    if not s then return nil end
+    local rest = value:sub(e + 1)
+    return rest:match("^([^\r\n]+)")
 end
 
 local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
