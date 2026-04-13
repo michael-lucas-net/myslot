@@ -5,6 +5,10 @@ local RegEvent = MySlot.regevent
 local MAX_PROFILES_COUNT = 100
 local IMPORT_BACKUP_COUNT = 1
 
+local function GetProfileClass(value)
+    if not value then return nil end
+    return value:match("# " .. CLASS .. ": ([^\r\n]+)")
+end
 
 local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 f:SetWidth(650)
