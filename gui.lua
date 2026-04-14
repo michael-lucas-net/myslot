@@ -751,7 +751,6 @@ RegEvent("ADDON_LOADED", function()
         end
         -- exportEditbox:SetScript("OnTextChanged", function() save(false) end)
 
-        local classFilterActive = false
         local initDropdown = function()
             local info = UIDropDownMenu_CreateInfo()
             info.text = L["Before Last Import"]
@@ -766,7 +765,7 @@ RegEvent("ADDON_LOADED", function()
             end
             UIDropDownMenu_AddButton(info)
 
-            if not classFilterActive then
+            if not MyslotSettings.classFilterActive then
                 -- Normal mode: show all profiles in order
                 for i, txt in ipairs(exports) do
                     local itemInfo = UIDropDownMenu_CreateInfo()
