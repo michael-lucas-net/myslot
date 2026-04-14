@@ -617,6 +617,7 @@ do
 end
 
 RegEvent("ADDON_LOADED", function()
+    MyslotAccountSettings = MyslotAccountSettings or {}
     do
         local t = CreateFrame("Frame", nil, f, BackdropTemplateMixin and "BackdropTemplate" or nil)
         t:SetWidth(600)
