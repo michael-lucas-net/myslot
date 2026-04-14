@@ -73,7 +73,7 @@ RegEvent("ADDON_LOADED", function()
         end)
     end
 
-    local doffset = -160
+    local doffset = -190
     do
         local t = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
         t:SetText(RED_FONT_COLOR:WrapTextInColorCode(L["DANGEROUS"]))
