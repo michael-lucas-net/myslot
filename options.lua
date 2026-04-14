@@ -36,6 +36,7 @@ RegEvent("ADDON_LOADED", function()
     end
 
     MyslotSettings = MyslotSettings or {}
+    MyslotSettings.classFilterActive = MyslotSettings.classFilterActive or false
 
     do
         MyslotSettings.minimap = MyslotSettings.minimap or { hide = false }
@@ -57,6 +58,18 @@ RegEvent("ADDON_LOADED", function()
             else
                 icon:Hide("Myslot")
             end
+        end)
+    end
+
+    do
+        local b = CreateFrame("CheckButton", nil, f, "UICheckButtonTemplate")
+        b:SetPoint("TOPLEFT", f, 15, -140)
+        b.text = b:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        b.text:SetPoint("LEFT", b, "RIGHT", 0, 1)
+        b.text:SetText(L["Filter profiles by class"])
+        b:SetChecked(MyslotSettings.classFilterActive)
+        b:SetScript("OnClick", function()
+            MyslotSettings.classFilterActive = b:GetChecked()
         end)
     end
 
