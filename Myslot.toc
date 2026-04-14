@@ -21,7 +21,7 @@
 ## Notes-zhTW: @localization(locale="zhTW", key="TOC_NOTES")@
 ## Author: Boshi Lian(farmer1992@gmail.com)
 ## Version: @project-version@
-## SavedVariables: MyslotExports
+## SavedVariables: MyslotExports, MyslotAccountSettings
 ## SavedVariablesPerCharacter: MyslotSettings
 ## IconTexture: Interface\AddOns\Myslot\Myslot
 

@@ -765,7 +765,7 @@ RegEvent("ADDON_LOADED", function()
             end
             UIDropDownMenu_AddButton(info)
 
-            if not MyslotSettings.classFilterActive then
+            if not MyslotAccountSettings.classFilterActive then
                 -- Normal mode: show all profiles in order
                 for i, txt in ipairs(exports) do
                     local itemInfo = UIDropDownMenu_CreateInfo()
